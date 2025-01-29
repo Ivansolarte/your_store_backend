@@ -1,9 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  console.log(`El puerto de Api seria => http://localhost:${3000}` );  
+
+  console.log(process.env.PORT,"main");
+  
+  console.log(`El puerto de Api seria => http://localhost:${process.env.PORT ?? 3000}` );  
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
