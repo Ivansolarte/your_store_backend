@@ -48,8 +48,7 @@ export class StoreController {
   @Get(':id/store')
   getStoreByUserID(@Param('id') id: string) {
     return this.storeService.getById(id);
-  }
- 
+  } 
 
   @Post()
   async createStore(@Body() storeDto: StoreDto) {
