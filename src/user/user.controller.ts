@@ -13,6 +13,7 @@ import {
   UseGuards,
   Res,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
@@ -23,6 +24,8 @@ import { Response } from 'express';
 @Controller('user')
 // @UseGuards(AuthTokenGuard)
 export class UserController {
+
+  private readonly logger = new Logger('UserService');
   constructor(
     private readonly userService: UserService,
     private readonly storeService: StoreService,
@@ -35,7 +38,9 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseGuards(AuthTokenGuard)
   async getById(@Param('id') id: string) {
+    this.logger.log('obteniendo inf perfil')
     const user = this.userService.getById(id);
     return await user;
   }
@@ -66,10 +71,16 @@ export class UserController {
     });
   }
 
-  @Put(':id')
-  async upDateUser(@Param('id') id: string, @Body() body: UserDto) {
+  @Put(':id')  
+  @UseGuards(AuthTokenGuard)
+  async upDateUser(@Param('id') id: string, @Body() body: UserDto,@Res() res: Response) {
     const upDateUser = this.userService.upDateUser(id, body);
-    return await upDateUser;
+   const resp = await upDateUser;
+   return res.status(202).json({
+    status: true,
+    data:resp,
+    message: 'Se registro con exito',
+   })
   }
 
   @Delete(':id')

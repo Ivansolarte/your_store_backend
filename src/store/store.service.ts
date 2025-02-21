@@ -65,7 +65,7 @@ export class StoreService {
       { new: true },
     );
   }
-  /// ontiene todas las store  que no estan eliminadas para publicar al usuario
+  /// obtiene todas las store  que no estan eliminadas para publicar al usuario
   async getAllPublic(): Promise<StoreInterface[]> {
     return this.storeModel.find({ companyStatus: true }).exec();
   }

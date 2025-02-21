@@ -6,6 +6,7 @@ export const ProductSchema = new Schema({
     storeId: String,  
     productName: String,
     productPrice: String, 
+    productReference: String, 
     productImgUrl: [String],
     productDescription: String, 
     productTerms: Boolean,   

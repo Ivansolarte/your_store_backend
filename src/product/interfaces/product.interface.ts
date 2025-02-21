@@ -11,4 +11,5 @@ export interface ProductInterface extends Document {
   productRegistrationDate?: Date;
   productTerms: boolean;
   productState: boolean;
+  productReference: string;
 }
