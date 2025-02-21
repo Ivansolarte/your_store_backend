@@ -13,9 +13,9 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.register({
       global: true,
       secret: 'ivanTOKEN', // Puedes usar una variable de entorno para el secreto
-      signOptions: { expiresIn: '1h' }, 
+      signOptions: { expiresIn: '6h' }, 
     }),
-  ],
+  ],  
   controllers: [LoginController],
   providers: [LoginService],
 })

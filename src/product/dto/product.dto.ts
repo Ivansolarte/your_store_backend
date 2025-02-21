@@ -21,4 +21,6 @@ export class ProductDto {
     productTerms: boolean;
     @IsBoolean()
     productState: boolean;
+    @IsString()
+    productReference: string;
 }

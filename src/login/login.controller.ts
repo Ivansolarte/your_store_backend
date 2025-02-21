@@ -30,7 +30,7 @@ export class LoginController {
     const resp: any = await this.loginService.validateUser(body);    
     if (resp) {      
       const token = this.jwtService.sign({
-        user: resp.fullNames,
+        user: resp?.fullNames,
         id: resp?._id,
         userPhone: resp.userPhone,
       });

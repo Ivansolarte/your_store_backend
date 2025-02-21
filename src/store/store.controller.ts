@@ -11,10 +11,14 @@ import {
   Delete,
   Query,
   Logger,
+  Res,
+  UseGuards,
 } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { StoreDto } from './dto/store.dto';
 import { ProductService } from 'src/product/product.service';
+import { AuthTokenGuard } from 'src/guards/auth-token/auth-token.guard';
+import { Response } from 'express';
 
 @Controller('store')
 export class StoreController {
@@ -26,10 +30,16 @@ export class StoreController {
     private readonly productService: ProductService,
   ) {}
 
-  @Get()
-  async getAllStore(@Query('userId') userId?: string) {
+  @Get()  
+  @UseGuards(AuthTokenGuard)
+  async getAllStore(@Query('userId') userId?: string, @Res() res?: Response) {
     if (userId) {
-      return await this.storeService.getAllByUserId(userId); // Filtra por userId
+      const resp = await this.storeService.getAllByUserId(userId); // Filtra por userId
+      return res?.status(200).json({
+        status:true,
+        data:resp,
+        message:"las tiendas del usuario"
+      })
     }
     return await this.storeService.getAll();
   }
