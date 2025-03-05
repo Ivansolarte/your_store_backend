@@ -15,9 +15,9 @@ export class StoreService {
     console.log('servicio user');
   }
 
-  async getAll(): Promise<StoreInterface[]> {
+  getAll(): Promise<StoreInterface[]> {
     //// todas las tiendas
-    const stores = await this.storeModel.find();
+    const stores = this.storeModel.find();
     return stores;
   }
 

@@ -8,7 +8,7 @@ import { Logger } from '@nestjs/common';
 dotenv.config();
 
 async function bootstrap() {
-  const logger = new Logger('StoreService');
+  const logger = new Logger('mainService');
   const app = await NestFactory.create(AppModule);
   async function getPublicIP() {
     try {

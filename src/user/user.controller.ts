@@ -49,7 +49,7 @@ export class UserController {
   async createUser(@Body() body: UserDto, @Res() res: Response) {
     body.userRol = 'Client';
     //validar  si ya existe el email
-    // console.log(body);
+     this.logger.log(body);
 
     const existingUser = await this.userService.findByEmailOrPhone(
       body.emailUser,
