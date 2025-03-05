@@ -22,77 +22,80 @@ import { Response } from 'express';
 
 @Controller('store')
 export class StoreController {
+  private readonly logger = new Logger('tienda');
 
-  private readonly logger = new Logger('StoreService');
-  
   constructor(
     private readonly storeService: StoreService,
     private readonly productService: ProductService,
-  ) {}
+  ) {
+    this.logger.log('controStore');
+  }
 
-  @Get()  
-  @UseGuards(AuthTokenGuard)
+  @Get()
   async getAllStore(@Query('userId') userId?: string, @Res() res?: Response) {
     if (userId) {
+      this.logger.log('todas las tiendas segun un usuario');
       const resp = await this.storeService.getAllByUserId(userId); // Filtra por userId
       return res?.status(200).json({
-        status:true,
-        data:resp,
-        message:"las tiendas del usuario"
-      })
+        status: true,
+        data: resp,
+        message: 'las tiendas del usuario',
+      });
     }
-    return await this.storeService.getAll();
+    this.logger.log('todas las tiendas');
+    const respAll = await this.storeService.getAll();
+    return res?.status(200).json({
+      status: true,
+      data: respAll,
+      message: 'Todas las tiendas',
+    });
   }
-   // todas las tiendas para mostar  a los usuarios 
-   @Get('public')
-   getStorePublic() {
-     const resp = this.storeService.getAllPublic();
-     return  resp
-   }
-  // obtenemos un tienda por su id
+  //Api publica
+  //Todas las tiendas para mostar  a los usuarios
+  @Get('public')
+  getStorePublic() {
+    const resp = this.storeService.getAllPublic();
+    return resp;
+  }
+  //Obtenemos un tienda por su id
   @Get(':id')
   getById(@Param('id') id: string) {
     return this.storeService.getById(id);
   }
-  // obtenemos un tienda por su id
+  //Obtenemos un tienda por su id
   @Get(':id/store')
   getStoreByUserID(@Param('id') id: string) {
     return this.storeService.getById(id);
-  } 
-
+  }
+  //Api crear una tienda
   @Post()
+  @UseGuards(AuthTokenGuard)
   async createStore(@Body() storeDto: StoreDto) {
     return await this.storeService.createStore(storeDto);
-  }  
-
+  }
+  //Edita un store
   @Patch(':id')
+  @UseGuards(AuthTokenGuard)
   async updateStore(@Param('id') id: string, @Body() storeDto: StoreDto) {
     return await this.storeService.upDateStore(id, storeDto);
   }
-
-  @Delete(':id')
-  async deleteStore(@Param('id') id: string) {
-    this.logger.log('entro a l delete de store');
-    console.log('entro dele store');
-    
-    const resp = await this.storeService.deleteStore(id);
-    console.log(resp);
-    
+  //Es el eliminar una store pero solo cambia el state
+  @Patch(':id/deactivate')
+  @UseGuards(AuthTokenGuard)
+  async deactivateStore(@Param('id') id: string) {
+    const resp = await this.storeService.updateCompanyStatus(id);
     if (resp) {
       this.logger.log('entro a l delete de los productos');
       await this.productService.massDelete(id);
     }
     return resp;
   }
-
-  @Patch(':id/deactivate')
-  async deactivateStore(@Param('id') id: string) {
-    this.logger.log("entro a desactivar la tienda")
-    const resp = await this.storeService.updateCompanyStatus(id);
-    console.log(resp);
-    
+  //Elimina/pone state a false
+  @Delete(':id')
+  @UseGuards(AuthTokenGuard)
+  async deleteStore(@Param('id') id: string) {
+    const resp = await this.storeService.deleteStore(id);
     if (resp) {
-      this.logger.log('entro a l delete de los productos');
       await this.productService.massDelete(id);
     }
     return resp;
